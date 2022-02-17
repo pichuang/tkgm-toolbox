@@ -27,7 +27,6 @@ _____________|','   ///_/-------------/   |
 
 
 ## Current Environments
-
 - VMware Tanzu Kubernetes Grid 1.4.1
 - VMware vSphere 7.0.3 build: 19234570
 - Bastion
@@ -36,4 +35,8 @@ _____________|','   ///_/-------------/   |
 
 ## Toolbox
 ### Certificate
-- [x] Add External Certificate - `ansible-playbook install-external-certs.yaml`
+- [ ] Add External Certificate - `ansible-playbook install-external-certs.yaml`
+
+### Time
+- [x] Check System Time - `ansible-playbook check-system-time.yaml`
+- [ ] Config Time Service - `ansible-playbook check-system-time.yml`
