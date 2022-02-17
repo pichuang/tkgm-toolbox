@@ -1,0 +1,17 @@
+[tanzu:children]
+controlplane
+worker
+
+[tanzu:vars]
+ansible_ssh_user=capv
+ansible_ssh_connection=ssh
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+public_key="~/.ssh/id_rsa.pub"
+
+[controlplane]
+192.168.67.19
+
+[worker]
+192.168.67.20
+

@@ -1,0 +1,15 @@
+- hosts: all
+  gather_facts: no
+  name: Install External Certs
+  become: true
+  become_user: root
+  tasks:
+    - name: Copy External Certs to Remote hosts
+      copy:
+        src: /etc/docker/certs.d/harbor.vmware.local/ca.crt
+        dest: /etc/ssl/certs/harbor.vmware.local.pem
+        #dest: /usr/local/share/ca-certificates/harbor.vmware.local.pem
+
+    - name: Update CA Certificates
+      shell:
+        cmd: "update-ca-certificates"
