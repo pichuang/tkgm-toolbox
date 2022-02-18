@@ -3,13 +3,41 @@
   name: Install External Certs
   become: true
   become_user: root
+
+  vars_prompt:
+    - name: external_certs_location
+      prompt: >
+        "Local File Location (eg. /etc/docker/certs.d/harbor.vmware.local/ca.crt)"
+      default: '/etc/docker/certs.d/harbor.vmware.local/ca.crt'
+      private: no
+
+    - name: remote_filename
+      prompt: >
+        "Remote Filename (eg. harbor.vmware.local.pem)"
+      default: "harbor.vmware.local.pem"
+      private: no
+
+    - name: container_registry_url
+      prompt: >
+        "Type URL:Port (eg. harbor.vmware.local:443)"
+      default: "harbor.vmware.local:443"
+      private: no
+
   tasks:
     - name: Copy External Certs to Remote hosts
       copy:
-        src: /etc/docker/certs.d/harbor.vmware.local/ca.crt
-        dest: /etc/ssl/certs/harbor.vmware.local.pem
+        src: "{{ external_certs_location }}"
+        dest: "/etc/ssl/certs/{{ remote_filename }}"
         #dest: /usr/local/share/ca-certificates/harbor.vmware.local.pem
 
     - name: Update CA Certificates
       shell:
         cmd: "update-ca-certificates"
+
+    - name: Check Certificate
+      shell:
+        cmd: "openssl s_client -prexit -connect {{ container_registry_url }}"
+      register: result
+
+    - debug:
+        msg: "{{ result.stdout }}"
