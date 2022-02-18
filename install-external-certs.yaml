@@ -1,20 +1,14 @@
 - hosts: all
   gather_facts: no
-  name: Install External Certs
+  name: Install External Certs in Ubuntu 20.04
   become: true
   become_user: root
 
   vars_prompt:
     - name: external_certs_location
       prompt: >
-        "Local File Location (eg. /etc/docker/certs.d/harbor.vmware.local/ca.crt)"
-      default: '/etc/docker/certs.d/harbor.vmware.local/ca.crt'
-      private: no
-
-    - name: remote_filename
-      prompt: >
-        "Remote Filename (eg. harbor.vmware.local.pem)"
-      default: "harbor.vmware.local.pem"
+        "Local File Location (eg. /usr/local/share/ca-certificates)"
+      default: '/usr/local/share/ca-certificates'
       private: no
 
     - name: container_registry_url
@@ -26,13 +20,21 @@
   tasks:
     - name: Copy External Certs to Remote hosts
       copy:
-        src: "{{ external_certs_location }}"
-        dest: "/etc/ssl/certs/{{ remote_filename }}"
-        #dest: /usr/local/share/ca-certificates/harbor.vmware.local.pem
+        src: "{{ external_certs_location }}/{{ item }}"
+        dest: "/usr/local/share/ca-certificates/{{ item }}"
+      with_items:
+        - homecloud-ca.crt
+        - vmware.local.crt
 
     - name: Update CA Certificates
       shell:
         cmd: "update-ca-certificates"
+
+    - name: Restart Containerd
+      service:
+        name: containerd
+        state: restarted
+        enabled: yes
 
     - name: Check Certificate
       shell:

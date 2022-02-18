@@ -35,7 +35,7 @@ _____________|','   ///_/-------------/   |
 
 ## Toolbox
 ### Certificate
-- [ ] Add External Certificate - `ansible-playbook install-external-certs.yaml`
+- [x] Add External Certificate - `ansible-playbook install-external-certs.yaml`
 
 ### Time
 - [x] Check System Time - `ansible-playbook check-system-time.yaml`
